@@ -13,21 +13,22 @@ api.interceptors.request.use((config) => {
 });
 
 api.interceptors.response.use(
-    (response) => {
-        return response;
-    },
+    (response) => response,
     (error) => {
-        // if error is a 401 (Unauthorized)
-        if (error.response && error.response.status === 401) {
-            console.warn("Token expired or invalid. Redirecting to login...");
+        // Check if the error is 401 AND the request was NOT to the login endpoint
+        const isLoginRequest = error.config.url.includes("/login");
 
-            // Clear local storage to remove the bad token
+        if (
+            error.response &&
+            error.response.status === 401 &&
+            !isLoginRequest
+        ) {
+            console.warn("Session expired. Redirecting...");
             localStorage.removeItem("token");
             localStorage.removeItem("user");
-
-            // Force redirect to login page
             window.location.href = "/login";
         }
+
         return Promise.reject(error);
     }
 );

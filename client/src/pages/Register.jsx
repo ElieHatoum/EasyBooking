@@ -25,10 +25,18 @@ const Register = () => {
             alert("Account created successfully! Please login.");
             navigate("/login");
         } catch (err) {
-            setError(
-                err.response?.data?.msg ||
-                    "Error registering. Please try again."
-            );
+            if (err.response?.data?.data?.errors) {
+                const validationErrors = err.response.data.data.errors;
+
+                const firstField = Object.keys(validationErrors)[0];
+                const firstErrorMessage = validationErrors[firstField][0];
+
+                setError(firstErrorMessage);
+            } else if (err.response?.data?.message) {
+                setError(err.response.data.message);
+            } else {
+                setError("Error registering. Please try again.");
+            }
         } finally {
             setIsLoading(false);
         }
