@@ -5,6 +5,7 @@ const auth = require("../middleware/auth.middleware");
 
 router.get("/", auth, controller.getRooms);
 router.get("/:id/availability", auth, controller.getRoomAvailability);
-router.post("/seed", controller.seedDatabase);
+if (process.env.NODE_ENV === "test")
+    router.post("/seed", controller.seedDatabase);
 
 module.exports = router;

@@ -18,11 +18,11 @@ const isWithinBusinessHours = (startStr, endStr) => {
     // Check if start is too early (before 8:00)
     if (startHour < 8) return false;
 
-    // Check if end is too late (after 18:00)
-    if (endHour > 18) return false;
-
     // Check if start is too late
     if (startHour >= 18) return false;
+
+    // Check if end is too late (after 18:00)
+    if (endHour > 18) return false;
 
     return true;
 };
