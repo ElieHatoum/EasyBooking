@@ -2,7 +2,7 @@ const Validator = require("validatorjs");
 
 const validateRule = {
     email: "required|email",
-    username: "required|string|min:3|max:20",
+    username: "required|string|alpha_num|min:3|max:20",
     password: "required|string|min:6",
 };
 
