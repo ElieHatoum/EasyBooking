@@ -3,11 +3,25 @@ const roomService = require("../services/rooms.service");
 // @route   GET /api/rooms
 const getRooms = async (req, res) => {
     try {
-        const rooms = await roomService.getAllRooms();
+        const { capacity } = req.query;
+        const rooms = await roomService.getAllRooms(capacity);
         res.status(200).json(rooms);
     } catch (err) {
         console.error(err);
         res.status(500).send("Server error");
+    }
+};
+
+// @route   GET /api/:roomId/availability
+const getRoomAvailability = async (req, res) => {
+    try {
+        const roomId = req.params.id;
+        const date = req.query.date;
+
+        const slots = await roomService.getRoomAvailability(roomId, date);
+        res.json({ roomId, availableSlots: slots });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
 };
 
@@ -24,5 +38,6 @@ const seedDatabase = async (req, res) => {
 
 module.exports = {
     getRooms,
+    getRoomAvailability,
     seedDatabase,
 };
