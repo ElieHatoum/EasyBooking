@@ -25,24 +25,22 @@ const MyBookings = () => {
         ) {
             return;
         }
-
         try {
             await api.delete(`/bookings/${bookingId}`);
             setBookings((prevBookings) =>
                 prevBookings.filter((b) => b._id !== bookingId)
             );
-            alert("Booking cancelled successfully.");
-        } catch (err) {
-            console.error("Failed to delete booking:", err);
+        } catch {
             alert("Failed to cancel booking. Please try again.");
         }
     };
 
+    // --- Helpers ---
     const formatDate = (isoString) => {
         return new Date(isoString).toLocaleDateString(undefined, {
-            weekday: "long",
+            weekday: "short",
             year: "numeric",
-            month: "long",
+            month: "short",
             day: "numeric",
         });
     };
@@ -59,127 +57,277 @@ const MyBookings = () => {
     const pastBookings = bookings.filter((b) => new Date(b.endTime) < now);
 
     if (loading)
-        return <p style={{ padding: "20px" }}>Loading reservations...</p>;
+        return (
+            <div style={styles.loadingContainer}>Loading reservations...</div>
+        );
 
     return (
-        <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
-            <h2>My Reservations</h2>
+        <div style={styles.container}>
+            <div style={styles.contentWrapper}>
+                <h2 style={styles.pageTitle}>My Reservations</h2>
 
-            {/* --- UPCOMING --- */}
-            <h3
-                style={{
-                    color: "#28a745",
-                    borderBottom: "2px solid #28a745",
-                    paddingBottom: "5px",
-                }}
-            >
-                Upcoming
-            </h3>
+                {/* --- UPCOMING SECTION --- */}
+                <div style={styles.sectionHeader}>
+                    <h3 style={styles.sectionTitle}>Upcoming</h3>
+                    <span style={styles.badge}>
+                        {upcomingBookings.length} Active
+                    </span>
+                </div>
 
-            {upcomingBookings.length === 0 ? (
-                <p>No upcoming bookings.</p>
-            ) : (
-                <ul style={{ listStyle: "none", padding: 0 }}>
-                    {upcomingBookings.map((b) => (
-                        <li key={b._id} style={cardStyle}>
-                            <div style={{ flex: 1 }}>
-                                <strong style={{ fontSize: "1.1em" }}>
-                                    {b.room ? b.room.name : "Unknown Room"}
-                                </strong>
-                                <div
-                                    style={{ color: "#555", marginTop: "5px" }}
-                                >
-                                    📅 {formatDate(b.startTime)}
-                                </div>
-                                <div style={{ color: "#555" }}>
-                                    ⏰ {formatTime(b.startTime)} -{" "}
-                                    {formatTime(b.endTime)}
+                {upcomingBookings.length === 0 ? (
+                    <div style={styles.emptyState}>
+                        No upcoming bookings found. Time to book a room!
+                    </div>
+                ) : (
+                    <div style={styles.grid}>
+                        {upcomingBookings.map((b) => (
+                            <div
+                                key={b._id}
+                                style={{ ...styles.card, ...styles.cardActive }}
+                            >
+                                {/* Status Strip */}
+                                <div style={styles.statusStripActive}></div>
+
+                                <div style={styles.cardContent}>
+                                    <div style={styles.cardHeader}>
+                                        <span style={styles.roomName}>
+                                            {b.room
+                                                ? b.room.name
+                                                : "Unknown Room"}
+                                        </span>
+                                        <span style={styles.statusTextActive}>
+                                            Confirmed
+                                        </span>
+                                    </div>
+
+                                    <div style={styles.details}>
+                                        <div style={styles.detailRow}>
+                                            <span>📅</span>{" "}
+                                            <span>
+                                                {formatDate(b.startTime)}
+                                            </span>
+                                        </div>
+                                        <div style={styles.detailRow}>
+                                            <span>⏰</span>{" "}
+                                            <span>
+                                                {formatTime(b.startTime)} -{" "}
+                                                {formatTime(b.endTime)}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <button
+                                        onClick={() => handleDelete(b._id)}
+                                        style={styles.cancelBtn}
+                                    >
+                                        Cancel Reservation
+                                    </button>
                                 </div>
                             </div>
+                        ))}
+                    </div>
+                )}
 
-                            <button
-                                onClick={() => handleDelete(b._id)}
-                                style={cancelButtonStyle}
+                {/* --- HISTORY SECTION --- */}
+                <div style={{ ...styles.sectionHeader, marginTop: "40px" }}>
+                    <h3 style={{ ...styles.sectionTitle, color: "#6c757d" }}>
+                        History
+                    </h3>
+                </div>
+
+                {pastBookings.length === 0 ? (
+                    <div style={styles.emptyState}>No past history.</div>
+                ) : (
+                    <div style={styles.grid}>
+                        {pastBookings.map((b) => (
+                            <div
+                                key={b._id}
+                                style={{ ...styles.card, ...styles.cardPast }}
                             >
-                                Cancel
-                            </button>
-                        </li>
-                    ))}
-                </ul>
-            )}
+                                <div style={styles.statusStripPast}></div>
+                                <div style={styles.cardContent}>
+                                    <div style={styles.cardHeader}>
+                                        <span
+                                            style={{
+                                                ...styles.roomName,
+                                                color: "#666",
+                                            }}
+                                        >
+                                            {b.room
+                                                ? b.room.name
+                                                : "Unknown Room"}
+                                        </span>
+                                        <span style={styles.statusTextPast}>
+                                            Completed
+                                        </span>
+                                    </div>
 
-            {/* --- HISTORY --- */}
-            <h3
-                style={{
-                    color: "#666",
-                    borderBottom: "2px solid #ccc",
-                    paddingBottom: "5px",
-                    marginTop: "40px",
-                }}
-            >
-                History
-            </h3>
-
-            {pastBookings.length === 0 ? (
-                <p>No past history.</p>
-            ) : (
-                <ul style={{ listStyle: "none", padding: 0 }}>
-                    {pastBookings.map((b) => (
-                        <li
-                            key={b._id}
-                            style={{
-                                ...cardStyle,
-                                backgroundColor: "#f9f9f9",
-                                borderColor: "#ddd",
-                            }}
-                        >
-                            <div style={{ flex: 1, opacity: 0.7 }}>
-                                <strong>
-                                    {b.room ? b.room.name : "Unknown Room"}
-                                </strong>
-                                <div style={{ fontSize: "0.9em" }}>
-                                    {formatDate(b.startTime)} <br />
-                                    {formatTime(b.startTime)} -{" "}
-                                    {formatTime(b.endTime)}
+                                    <div
+                                        style={{
+                                            ...styles.details,
+                                            color: "#888",
+                                        }}
+                                    >
+                                        <div style={styles.detailRow}>
+                                            <span>📅</span>{" "}
+                                            <span>
+                                                {formatDate(b.startTime)}
+                                            </span>
+                                        </div>
+                                        <div style={styles.detailRow}>
+                                            <span>⏰</span>{" "}
+                                            <span>
+                                                {formatTime(b.startTime)} -{" "}
+                                                {formatTime(b.endTime)}
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <span
-                                style={{
-                                    fontSize: "0.8em",
-                                    color: "#888",
-                                    fontStyle: "italic",
-                                }}
-                            >
-                                Completed
-                            </span>
-                        </li>
-                    ))}
-                </ul>
-            )}
+                        ))}
+                    </div>
+                )}
+            </div>
         </div>
     );
 };
 
-const cardStyle = {
-    marginBottom: "15px",
-    padding: "15px",
-    border: "1px solid #ddd",
-    borderRadius: "8px",
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: "white",
-    boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
-};
-
-const cancelButtonStyle = {
-    padding: "8px 15px",
-    backgroundColor: "#ff4d4f",
-    color: "white",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
-    fontWeight: "bold",
+const styles = {
+    container: {
+        minHeight: "100vh",
+        backgroundColor: "#f0f2f5",
+        padding: "40px 20px",
+        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+    },
+    contentWrapper: {
+        maxWidth: "800px",
+        margin: "0 auto",
+    },
+    loadingContainer: {
+        display: "flex",
+        justifyContent: "center",
+        paddingTop: "50px",
+        fontSize: "18px",
+        color: "#666",
+    },
+    pageTitle: {
+        fontSize: "28px",
+        color: "#1a1a1a",
+        marginBottom: "30px",
+        fontWeight: "700",
+    },
+    sectionHeader: {
+        display: "flex",
+        alignItems: "center",
+        gap: "15px",
+        marginBottom: "15px",
+        borderBottom: "1px solid #e0e0e0",
+        paddingBottom: "10px",
+    },
+    sectionTitle: {
+        fontSize: "20px",
+        margin: 0,
+        color: "#333",
+    },
+    badge: {
+        backgroundColor: "#e6f4ea",
+        color: "#1e7e34",
+        padding: "4px 10px",
+        borderRadius: "12px",
+        fontSize: "12px",
+        fontWeight: "600",
+    },
+    grid: {
+        display: "flex",
+        flexDirection: "column",
+        gap: "15px",
+    },
+    emptyState: {
+        padding: "20px",
+        backgroundColor: "#fff",
+        borderRadius: "8px",
+        color: "#666",
+        textAlign: "center",
+        border: "1px dashed #ccc",
+    },
+    // --- CARD STYLES ---
+    card: {
+        backgroundColor: "#fff",
+        borderRadius: "10px",
+        boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+        display: "flex",
+        overflow: "hidden",
+        transition: "transform 0.2s",
+    },
+    cardActive: {
+        border: "1px solid #e0e0e0",
+    },
+    cardPast: {
+        backgroundColor: "#f9f9f9",
+        border: "1px solid #eee",
+    },
+    statusStripActive: {
+        width: "6px",
+        backgroundColor: "#28a745",
+    },
+    statusStripPast: {
+        width: "6px",
+        backgroundColor: "#adb5bd",
+    },
+    cardContent: {
+        flex: 1,
+        padding: "20px",
+    },
+    cardHeader: {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: "10px",
+    },
+    roomName: {
+        fontSize: "18px",
+        fontWeight: "600",
+        color: "#007bff",
+    },
+    statusTextActive: {
+        fontSize: "12px",
+        color: "#28a745",
+        fontWeight: "bold",
+        textTransform: "uppercase",
+        letterSpacing: "0.5px",
+    },
+    statusTextPast: {
+        fontSize: "12px",
+        color: "#adb5bd",
+        fontWeight: "bold",
+        textTransform: "uppercase",
+        letterSpacing: "0.5px",
+    },
+    details: {
+        display: "flex",
+        flexDirection: "column",
+        gap: "8px",
+        color: "#555",
+        fontSize: "14px",
+    },
+    detailRow: {
+        display: "flex",
+        alignItems: "center",
+        gap: "10px",
+    },
+    cancelBtn: {
+        marginTop: "15px",
+        padding: "8px 16px",
+        backgroundColor: "#fff",
+        color: "#dc3545",
+        border: "1px solid #dc3545",
+        borderRadius: "6px",
+        cursor: "pointer",
+        fontWeight: "600",
+        fontSize: "13px",
+        float: "right",
+        transition: "background-color 0.2s",
+    },
 };
 
 export default MyBookings;
