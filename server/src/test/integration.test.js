@@ -31,7 +31,7 @@ describe("EasyBooking API Integration Tests", () => {
     // --- Register and Login ---
     const setupUser = async () => {
         const userData = {
-            username: "Test User",
+            username: "TestUser",
             email: "test@example.com",
             password: "password123",
         };
@@ -58,7 +58,7 @@ describe("EasyBooking API Integration Tests", () => {
     // --- Authentication ---
     it("1. POST /api/auth/register - Should register a new user", async () => {
         const res = await request(app).post("/api/auth/register").send({
-            username: "New User",
+            username: "NewUser",
             email: "new@example.com",
             password: "password123",
         });
@@ -93,7 +93,7 @@ describe("EasyBooking API Integration Tests", () => {
 
     it("4. POST /api/auth/register - Should fail (412) if missing password", async () => {
         const res = await request(app).post("/api/auth/register").send({
-            username: "Bad User",
+            username: "BadUser",
             email: "bad@example.com",
         });
 
