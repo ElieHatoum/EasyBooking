@@ -13,14 +13,14 @@ describe("auth.service", () => {
         jest.clearAllMocks();
     });
 
-    it("registerUser throws if email exists", async () => {
+    it("TC-14: registerUser throws if email exists", async () => {
         userModel.findOne.mockResolvedValue({ email: "test@example.com" });
         await expect(
             registerUser("test@example.com", "123456")
         ).rejects.toThrow("Email already used");
     });
 
-    it("registerUser creates user if email not exists", async () => {
+    it("TC-15: registerUser creates user if email not exists", async () => {
         userModel.findOne.mockResolvedValue(null);
         bcrypt.hash.mockResolvedValue("hashedpw");
         userModel.mockImplementation(function (data) {
@@ -39,14 +39,14 @@ describe("auth.service", () => {
         expect(user._id).toBe("1");
     });
 
-    it("loginUser throws if user not found", async () => {
+    it("TC-16: loginUser throws if user not found", async () => {
         userModel.findOne.mockResolvedValue(null);
         await expect(loginUser("test@example.com", "123456")).rejects.toThrow(
             "Authentication failed"
         );
     });
 
-    it("loginUser throws if password does not match", async () => {
+    it("TC-17: loginUser throws if password does not match", async () => {
         userModel.findOne.mockResolvedValue({
             email: "test@example.com",
             password: "hashedpw",
@@ -58,7 +58,7 @@ describe("auth.service", () => {
         );
     });
 
-    it("loginUser returns token if credentials valid", async () => {
+    it("TC-18: loginUser returns token if credentials valid", async () => {
         userModel.findOne.mockResolvedValue({
             email: "test@example.com",
             password: "hashedpw",
