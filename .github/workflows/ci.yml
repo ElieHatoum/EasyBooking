@@ -2,7 +2,7 @@ name: CI Pipeline
 
 on:
     push:
-        branches: ["**"]
+        branches: ["main"]
     pull_request:
         branches: ["main"]
 
@@ -68,3 +68,27 @@ jobs:
                   wait-on: "http://localhost:5173"
 
                   browser: chrome
+    deploy:
+        runs-on: ubuntu-latest
+        needs: [server-tests, client-checks]
+        if: github.ref == 'refs/heads/main'
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            # Check which folders changed
+            - name: Check for Server Changes
+              uses: dorny/paths-filter@v3
+              id: changes
+              with:
+                  filters: |
+                      server:
+                        - 'server/**'
+                      client:
+                        - 'client/**'
+
+            # Trigger Server Deploy (ONLY if server folder changed)
+            - name: Trigger Render Deploy (Server)
+              if: steps.changes.outputs.server == 'true'
+              run: curl "${{ secrets.RENDER_DEPLOY_HOOK_SERVER }}"
