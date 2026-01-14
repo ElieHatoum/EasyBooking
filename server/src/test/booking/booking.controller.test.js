@@ -25,7 +25,7 @@ describe("Booking Controller", () => {
 
     // --- TEST: createBooking ---
     describe("createBooking", () => {
-        it("should return 201 and the booking if creation is successful", async () => {
+        it("TC-19: should return 201 and the booking if creation is successful", async () => {
             const req = mockRequest(
                 { roomId: "room123", startTime: "10:00", endTime: "11:00" },
                 {},
@@ -53,7 +53,7 @@ describe("Booking Controller", () => {
             expect(res.json).toHaveBeenCalledWith(mockBooking);
         });
 
-        it("should return 400 if service throws a specific error", async () => {
+        it("TC-20: should return 400 if service throws a specific error", async () => {
             const req = mockRequest(
                 { roomId: "room123" },
                 {},
@@ -73,7 +73,7 @@ describe("Booking Controller", () => {
             expect(res.json).toHaveBeenCalledWith({ msg: "Invalid time" });
         });
 
-        it("should return 500 on unexpected server error", async () => {
+        it("TC-21: should return 500 on unexpected server error", async () => {
             const req = mockRequest({}, {}, { userId: "user123" });
             const res = mockResponse();
 
@@ -87,7 +87,7 @@ describe("Booking Controller", () => {
             expect(res.json).toHaveBeenCalledWith({ msg: "Database fail" });
         });
 
-        it("should use default 'Server error' message if error object has no message", async () => {
+        it("TC-22: should use default 'Server error' message if error object has no message", async () => {
             const req = mockRequest({}, {}, { userId: "user123" });
             const res = mockResponse();
 
@@ -103,7 +103,7 @@ describe("Booking Controller", () => {
 
     // --- TEST: deleteBooking ---
     describe("deleteBooking", () => {
-        it("should return 200 on successful deletion", async () => {
+        it("TC-23: should return 200 on successful deletion", async () => {
             const req = mockRequest(
                 {},
                 { bookingId: "b123" },
@@ -126,7 +126,7 @@ describe("Booking Controller", () => {
             });
         });
 
-        it("should handle 404 if booking not found", async () => {
+        it("TC-24: should handle 404 if booking not found", async () => {
             const req = mockRequest(
                 {},
                 { bookingId: "b123" },
@@ -147,7 +147,7 @@ describe("Booking Controller", () => {
             });
         });
 
-        it("should default to 500 if error has no statusCode", async () => {
+        it("TC-25: should default to 500 if error has no statusCode", async () => {
             const req = mockRequest(
                 {},
                 { bookingId: "b123" },
@@ -172,7 +172,7 @@ describe("Booking Controller", () => {
 
     // --- TEST: getMyBookings ---
     describe("getMyBookings", () => {
-        it("should return 200 and list of bookings", async () => {
+        it("TC-26: should return 200 and list of bookings", async () => {
             const req = mockRequest();
             req.userId = "user123";
             const res = mockResponse();
@@ -188,7 +188,7 @@ describe("Booking Controller", () => {
             expect(res.json).toHaveBeenCalledWith(mockList);
         });
 
-        it("should return 500 if service fails", async () => {
+        it("TC-27: should return 500 if service fails", async () => {
             const req = mockRequest();
             req.userId = "user123";
             const res = mockResponse();

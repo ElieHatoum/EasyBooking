@@ -31,7 +31,7 @@ describe("Booking Service", () => {
         const validStart = "2025-01-02T10:00:00.000Z"; // Future (Jan 2nd)
         const validEnd = "2025-01-02T11:00:00.000Z";
 
-        it("should throw error if start time is in the past", async () => {
+        it("TC-28: should throw error if start time is in the past", async () => {
             const pastDate = "2024-01-01T10:00:00.000Z"; // Before 2025
 
             await expect(
@@ -39,7 +39,7 @@ describe("Booking Service", () => {
             ).rejects.toThrow("Cannot book a room in the past");
         });
 
-        it("should throw error if end time is before start time", async () => {
+        it("TC-29: should throw error if end time is before start time", async () => {
             const endBeforeStart = "2025-01-02T09:00:00.000Z"; // 09:00 is before 10:00
 
             await expect(
@@ -52,7 +52,7 @@ describe("Booking Service", () => {
             ).rejects.toThrow("End time must be after start time");
         });
 
-        it("should throw error if times are not hourly (e.g. 10:15)", async () => {
+        it("TC-30: should throw error if times are not hourly (e.g. 10:15)", async () => {
             const notHourly = "2025-01-02T10:15:00.000Z";
 
             await expect(
@@ -65,7 +65,7 @@ describe("Booking Service", () => {
             ).rejects.toThrow(/full hours only/);
         });
 
-        it("should throw error if outside business hours (before 08:00)", async () => {
+        it("TC-31: should throw error if outside business hours (before 08:00)", async () => {
             // definitely < 8
             const tooEarly = "2025-01-02T04:00:00.000Z";
             const endEarly = "2025-01-02T05:00:00.000Z";
@@ -77,7 +77,7 @@ describe("Booking Service", () => {
             );
         });
 
-        it("should throw error if outside business hours (after 18:00)", async () => {
+        it("TC-32: should throw error if outside business hours (after 18:00)", async () => {
             // definitely > 18
             const endLate = "2025-01-02T19:00:00.000Z";
 
@@ -93,7 +93,7 @@ describe("Booking Service", () => {
             );
         });
 
-        it("should throw error if start time is at closing time (start at 18:00)", async () => {
+        it("TC-33: should throw error if start time is at closing time (start at 18:00)", async () => {
             // definitely > 18
             const startLate = "2025-01-02T18:00:00.000Z";
             const endLate = "2025-01-02T19:00:00.000Z";
@@ -104,7 +104,7 @@ describe("Booking Service", () => {
             );
         });
 
-        it("should throw error (409) if room is occupied", async () => {
+        it("TC-34: should throw error (409) if room is occupied", async () => {
             // Mock findOne to return a "conflict" object (simulating a found booking)
             Booking.findOne.mockResolvedValue({ _id: "conflict123" });
 
@@ -128,7 +128,7 @@ describe("Booking Service", () => {
             });
         });
 
-        it("should create booking if validation passes and room is free", async () => {
+        it("TC-35: should create booking if validation passes and room is free", async () => {
             // 1. Mock findOne to return null (no conflict)
             Booking.findOne.mockResolvedValue(null);
 
@@ -159,7 +159,7 @@ describe("Booking Service", () => {
 
     // --- TEST: getUserBookings ---
     describe("getUserBookings", () => {
-        it("should fetch, populate, and sort bookings", async () => {
+        it("TC-36: should fetch, populate, and sort bookings", async () => {
             const mockBookings = [{ _id: "b1" }, { _id: "b2" }];
 
             // Mocking the Mongoose Chain: find -> populate -> sort -> return data
@@ -181,7 +181,7 @@ describe("Booking Service", () => {
 
     // --- TEST: deleteBooking ---
     describe("deleteBooking", () => {
-        it("should return deleted booking if found", async () => {
+        it("TC-37: should return deleted booking if found", async () => {
             const mockDeleted = { _id: "b123", userId: "user1" };
             Booking.findOneAndDelete.mockResolvedValue(mockDeleted);
 
@@ -194,7 +194,7 @@ describe("Booking Service", () => {
             expect(result).toEqual(mockDeleted);
         });
 
-        it("should throw 404 if booking not found or user unauthorized", async () => {
+        it("TC-38: should throw 404 if booking not found or user unauthorized", async () => {
             Booking.findOneAndDelete.mockResolvedValue(null); // Nothing found
 
             await expect(

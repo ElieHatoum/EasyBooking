@@ -9,7 +9,7 @@ describe("auth.controller", () => {
         jest.clearAllMocks();
     });
 
-    it("register returns 201 on success", async () => {
+    it("TC-01: register returns 201 on success", async () => {
         const req = { body: { email: "test@example.com", password: "123456" } };
         const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
         const user = {
@@ -30,7 +30,7 @@ describe("auth.controller", () => {
         });
     });
 
-    it("register returns error on failure", async () => {
+    it("TC-02: register returns error on failure", async () => {
         const req = { body: { email: "test@example.com", password: "123456" } };
         const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
         const error = new Error("Email already used");
@@ -47,7 +47,7 @@ describe("auth.controller", () => {
         });
     });
 
-    it("register returns 500 when error has no statusCode", async () => {
+    it("TC-03: register returns 500 when error has no statusCode", async () => {
         const req = { body: { email: "test@example.com", password: "123456" } };
         const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
         const error = new Error("Unexpected error");
@@ -63,7 +63,7 @@ describe("auth.controller", () => {
         });
     });
 
-    it("login returns 200 on success", async () => {
+    it("TC-04: login returns 200 on success", async () => {
         const req = { body: { email: "test@example.com", password: "123456" } };
         const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
         const verified = { accessToken: "token123" };
@@ -76,7 +76,7 @@ describe("auth.controller", () => {
         expect(res.json).toHaveBeenCalledWith(verified);
     });
 
-    it("login returns error on failure", async () => {
+    it("TC-05: login returns error on failure", async () => {
         const req = {
             body: { email: "test@example.com", password: "wrongpw" },
         };
@@ -95,7 +95,7 @@ describe("auth.controller", () => {
         });
     });
 
-    it("login returns 500 when error has no statusCode", async () => {
+    it("TC-06: login returns 500 when error has no statusCode", async () => {
         const req = {
             body: { email: "test@example.com", password: "wrongpw" },
         };

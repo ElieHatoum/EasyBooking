@@ -12,7 +12,7 @@ describe("Room Service", () => {
 
     // --- TEST: getAllRooms ---
     describe("getAllRooms", () => {
-        it("should return all rooms if no capacity is provided", async () => {
+        it("TC-46: should return all rooms if no capacity is provided", async () => {
             const mockRooms = [{ name: "A1" }, { name: "B2" }];
             Room.find.mockResolvedValue(mockRooms);
 
@@ -22,7 +22,7 @@ describe("Room Service", () => {
             expect(result).toEqual(mockRooms);
         });
 
-        it("should filter by capacity if provided", async () => {
+        it("TC-47: should filter by capacity if provided", async () => {
             const mockRooms = [{ name: "Large Room", capacity: 20 }];
             Room.find.mockResolvedValue(mockRooms);
 
@@ -34,7 +34,7 @@ describe("Room Service", () => {
             expect(result).toEqual(mockRooms);
         });
 
-        it("should handle string inputs for capacity correctly", async () => {
+        it("TC-48: should handle string inputs for capacity correctly", async () => {
             await roomService.getAllRooms("10");
 
             expect(Room.find).toHaveBeenCalledWith({
@@ -54,7 +54,7 @@ describe("Room Service", () => {
             return d;
         };
 
-        it("should return full day (08:00 - 18:00) if no bookings exist", async () => {
+        it("TC-49: should return full day (08:00 - 18:00) if no bookings exist", async () => {
             // Mock: No bookings found
             const mockSort = jest.fn().mockResolvedValue([]);
             Booking.find.mockReturnValue({ sort: mockSort });
@@ -72,7 +72,7 @@ describe("Room Service", () => {
             });
         });
 
-        it("should calculate gaps around a single booking", async () => {
+        it("TC-50: should calculate gaps around a single booking", async () => {
             // Scenario: Booking from 10:00 to 12:00
             const booking = {
                 startTime: time(10),
@@ -96,7 +96,7 @@ describe("Room Service", () => {
             expect(slots[1].endTime).toEqual(time(18));
         });
 
-        it("should return NO slots if fully booked (08:00 - 18:00)", async () => {
+        it("TC-51: should return NO slots if fully booked (08:00 - 18:00)", async () => {
             // Scenario: One massive booking all day
             const booking = {
                 startTime: time(8),
@@ -114,7 +114,7 @@ describe("Room Service", () => {
             expect(slots).toHaveLength(0);
         });
 
-        it("should handle overlapping gaps correctly (sequential bookings)", async () => {
+        it("TC-52: should handle overlapping gaps correctly (sequential bookings)", async () => {
             // Scenario: 09:00-10:00 AND 10:00-11:00
             // Gaps should be: 08:00-09:00 AND 11:00-18:00
             const bookings = [
@@ -141,7 +141,7 @@ describe("Room Service", () => {
 
     // --- TEST: seedRooms ---
     describe("seedRooms", () => {
-        it("should insert default rooms", async () => {
+        it("TC-53: should insert default rooms", async () => {
             // Mock insertMany
             Room.insertMany.mockResolvedValue(["room1", "room2"]);
 
@@ -156,7 +156,7 @@ describe("Room Service", () => {
             expect(result).toHaveLength(2);
         });
 
-        it("should throw error if seeding fails", async () => {
+        it("TC-54: should throw error if seeding fails", async () => {
             Room.insertMany.mockRejectedValue(new Error("DB Error"));
 
             await expect(roomService.seedRooms()).rejects.toThrow("DB Error");

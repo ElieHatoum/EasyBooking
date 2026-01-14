@@ -12,7 +12,7 @@ describe("auth.middleware", () => {
         jest.clearAllMocks();
     });
 
-    it("should call next if token is valid", () => {
+    it("TC-07: should call next if token is valid", () => {
         const req = { headers: { authorization: "Bearer validtoken" } };
         const res = {};
         const next = jest.fn();
@@ -24,7 +24,7 @@ describe("auth.middleware", () => {
         expect(next).toHaveBeenCalled();
     });
 
-    it("should return 401 if token is invalid", () => {
+    it("TC-08: should return 401 if token is invalid", () => {
         const req = { headers: { authorization: "Bearer invalidtoken" } };
         const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
         const next = jest.fn();
@@ -40,7 +40,7 @@ describe("auth.middleware", () => {
         });
     });
 
-    it("should return 401 if authorization header is missing", () => {
+    it("TC-09: should return 401 if authorization header is missing", () => {
         const req = { headers: {} }; // No authorization key
         const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
         const next = jest.fn();
@@ -55,7 +55,7 @@ describe("authvalidation.middleware", () => {
         jest.clearAllMocks();
     });
 
-    it("registerValidation passes valid data", async () => {
+    it("TC-10: registerValidation passes valid data", async () => {
         const req = {
             body: {
                 username: "user",
@@ -69,7 +69,7 @@ describe("authvalidation.middleware", () => {
         expect(next).toHaveBeenCalled();
     });
 
-    it("registerValidation fails invalid data", async () => {
+    it("TC-11: registerValidation fails invalid data", async () => {
         const req = {
             body: { username: "", email: "bademail", password: "123" },
         };
@@ -80,7 +80,7 @@ describe("authvalidation.middleware", () => {
         expect(res.send).toHaveBeenCalled();
     });
 
-    it("loginValidation passes valid data", async () => {
+    it("TC-12: loginValidation passes valid data", async () => {
         const req = { body: { email: "test@example.com", password: "123456" } };
         const res = {};
         const next = jest.fn();
@@ -88,7 +88,7 @@ describe("authvalidation.middleware", () => {
         expect(next).toHaveBeenCalled();
     });
 
-    it("loginValidation fails invalid data", async () => {
+    it("TC-13: loginValidation fails invalid data", async () => {
         const req = { body: { email: "", password: "" } };
         const res = { status: jest.fn().mockReturnThis(), send: jest.fn() };
         const next = jest.fn();

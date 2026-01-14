@@ -56,7 +56,7 @@ describe("EasyBooking API Integration Tests", () => {
     };
 
     // --- Authentication ---
-    it("1. POST /api/auth/register - Should register a new user", async () => {
+    it("TC-55: POST /api/auth/register - Should register a new user", async () => {
         const res = await request(app).post("/api/auth/register").send({
             username: "NewUser",
             email: "new@example.com",
@@ -66,7 +66,7 @@ describe("EasyBooking API Integration Tests", () => {
         expect(res.body.success).toBe(true);
     });
 
-    it("2. POST /api/auth/login - Should return a JWT token", async () => {
+    it("TC-56: POST /api/auth/login - Should return a JWT token", async () => {
         await setupUser();
 
         const res = await request(app).post("/api/auth/login").send({
@@ -78,7 +78,7 @@ describe("EasyBooking API Integration Tests", () => {
         expect(res.body).toHaveProperty("accessToken");
     });
 
-    it("3. POST /api/auth/register - Should fail (409) if email exists", async () => {
+    it("TC-57: POST /api/auth/register - Should fail (409) if email exists", async () => {
         await setupUser();
 
         const res = await request(app).post("/api/auth/register").send({
@@ -91,7 +91,7 @@ describe("EasyBooking API Integration Tests", () => {
         expect(res.body.message).toBe("Email already used");
     });
 
-    it("4. POST /api/auth/register - Should fail (412) if missing password", async () => {
+    it("TC-58: POST /api/auth/register - Should fail (412) if missing password", async () => {
         const res = await request(app).post("/api/auth/register").send({
             username: "BadUser",
             email: "bad@example.com",
@@ -102,7 +102,7 @@ describe("EasyBooking API Integration Tests", () => {
     });
 
     // --- Room Management ---
-    it("5. POST /api/rooms/seed - Should populate rooms", async () => {
+    it("TC-59: POST /api/rooms/seed - Should populate rooms", async () => {
         const res = await request(app).post("/api/rooms/seed");
         expect(res.statusCode).toBe(201);
 
@@ -110,7 +110,7 @@ describe("EasyBooking API Integration Tests", () => {
         expect(count).toBeGreaterThan(0);
     });
 
-    it("6. GET /api/rooms - Should retrieve rooms", async () => {
+    it("TC-60: GET /api/rooms - Should retrieve rooms", async () => {
         await setupRoom();
         const res = await request(app)
             .get("/api/rooms")
@@ -120,7 +120,7 @@ describe("EasyBooking API Integration Tests", () => {
     });
 
     // --- Booking Flow ---
-    it("7. POST /api/bookings - Should create a booking", async () => {
+    it("TC-61: POST /api/bookings - Should create a booking", async () => {
         await setupUser();
         await setupRoom();
 
@@ -142,7 +142,7 @@ describe("EasyBooking API Integration Tests", () => {
         expect(res.statusCode).toBe(201);
     });
 
-    it("8. POST /api/bookings - Should reject overlapping booking", async () => {
+    it("TC-62: POST /api/bookings - Should reject overlapping booking", async () => {
         await setupUser();
         await setupRoom();
 
@@ -171,7 +171,7 @@ describe("EasyBooking API Integration Tests", () => {
         expect(res.statusCode).toBe(409); // ROOM_OCCUPIED
     });
 
-    it("9. GET /api/bookings/my-bookings - Should list user bookings", async () => {
+    it("TC-63: GET /api/bookings/my-bookings - Should list user bookings", async () => {
         await setupUser();
         await setupRoom();
 
@@ -198,7 +198,7 @@ describe("EasyBooking API Integration Tests", () => {
         expect(res.body.length).toBe(1);
     });
 
-    it("10. DELETE /api/bookings/:id - Should cancel booking", async () => {
+    it("TC-64: DELETE /api/bookings/:id - Should cancel booking", async () => {
         await setupUser();
         await setupRoom();
 

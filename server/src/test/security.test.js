@@ -51,7 +51,7 @@ describe("Security & Penetration Tests", () => {
         return room._id.toString();
     };
 
-    it("SECURITY-01: User B cannot delete User A's booking", async () => {
+    it("SEC-01: User B cannot delete User A's booking", async () => {
         const userA = await createUser("UserA");
         const userB = await createUser("UserB");
         const roomId = await createRoom();
@@ -79,7 +79,7 @@ describe("Security & Penetration Tests", () => {
         expect(attackRes.body.message).toBe("Booking not found");
     });
 
-    it("SECURITY-02: Should prevent NoSQL Injection on Login", async () => {
+    it("SEC-02: Should prevent NoSQL Injection on Login", async () => {
         await createUser("Victim");
 
         const payload = {
@@ -91,7 +91,7 @@ describe("Security & Penetration Tests", () => {
         expect(res.statusCode).toBe(412);
     });
 
-    it("SECURITY-03: Should reject forged JWT tokens", async () => {
+    it("SEC-03: Should reject forged JWT tokens", async () => {
         const roomId = await createRoom();
 
         // Create a fake token (signed with wrong secret)
@@ -113,7 +113,7 @@ describe("Security & Penetration Tests", () => {
         expect([401, 403]).toContain(res.statusCode);
     });
 
-    it("SECURITY-04: Should handle malicious scripts in input fields", async () => {
+    it("SEC-04: Should handle malicious scripts in input fields", async () => {
         const user = await createUser("ScriptKiddie");
 
         // Malicious room name
@@ -129,7 +129,7 @@ describe("Security & Penetration Tests", () => {
         expect(res.statusCode).not.toBe(500);
     });
 
-    it("SECURITY-05: Should NOT return sensitive data in responses", async () => {
+    it("SEC-05: Should NOT return sensitive data in responses", async () => {
         const res = await request(app).post("/api/auth/register").send({
             username: "SafeUser",
             email: "safe@test.com",
@@ -146,7 +146,7 @@ describe("Security & Penetration Tests", () => {
         expect(responseBody.password).toBeUndefined();
     });
 
-    it("SECURITY-06: Should reject expired JWT tokens", async () => {
+    it("SEC-06: Should reject expired JWT tokens", async () => {
         const roomId = await createRoom();
         const jwt = require("jsonwebtoken");
 
@@ -169,7 +169,7 @@ describe("Security & Penetration Tests", () => {
         expect(res.statusCode).toBe(401);
     });
 
-    it("SECURITY-07: Should enforce strong password", async () => {
+    it("SEC-07: Should enforce strong password", async () => {
         const weakUser = {
             username: "WeakPass",
             email: "weak@test.com",
@@ -184,7 +184,7 @@ describe("Security & Penetration Tests", () => {
         expect(res.body.data.errors.password).toBeDefined();
     });
 
-    it("SECURITY-08: Should handle unexpected data types", async () => {
+    it("SEC-08: Should handle unexpected data types", async () => {
         const payload = {
             username: ["Not", "A", "String"],
             email: "valid@test.com",
@@ -200,7 +200,7 @@ describe("Security & Penetration Tests", () => {
         }
     });
 
-    it("SECURITY-09: Should not leak stack traces on server errors", async () => {
+    it("SEC-09: Should not leak stack traces on server errors", async () => {
         const malformedId = "123";
         const user = await createUser("StackTest");
 
@@ -228,7 +228,7 @@ describe("Security & Penetration Tests", () => {
         }
     });
 
-    it("SECURITY-10: Should reject payloads larger than the default limit", async () => {
+    it("SEC-10: Should reject payloads larger than the default limit", async () => {
         // Create a string that is approx 10MB in size
         const massiveString = new Array(10000000).join("a");
 

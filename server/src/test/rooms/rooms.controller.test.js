@@ -33,7 +33,7 @@ describe("Room Controller", () => {
 
     // --- TEST: getRooms ---
     describe("getRooms", () => {
-        it("should return 200 and list of rooms", async () => {
+        it("TC-39: should return 200 and list of rooms", async () => {
             const req = mockRequest({}, {}, {});
             const res = mockResponse();
             const mockRooms = [{ name: "A1" }, { name: "B2" }];
@@ -48,7 +48,7 @@ describe("Room Controller", () => {
             expect(res.json).toHaveBeenCalledWith(mockRooms);
         });
 
-        it("should pass capacity filter to the service", async () => {
+        it("TC-40: should pass capacity filter to the service", async () => {
             const req = mockRequest({}, {}, { capacity: "10" });
             const res = mockResponse();
 
@@ -60,7 +60,7 @@ describe("Room Controller", () => {
             expect(res.status).toHaveBeenCalledWith(200);
         });
 
-        it("should return 500 on server error", async () => {
+        it("TC-41: should return 500 on server error", async () => {
             const req = mockRequest();
             const res = mockResponse();
 
@@ -77,7 +77,7 @@ describe("Room Controller", () => {
 
     // --- TEST: getRoomAvailability ---
     describe("getRoomAvailability", () => {
-        it("should return 200 and availability slots", async () => {
+        it("TC-42: should return 200 and availability slots", async () => {
             const req = mockRequest(
                 {},
                 { id: "room123" },
@@ -102,7 +102,7 @@ describe("Room Controller", () => {
             });
         });
 
-        it("should return 500 if service throws error", async () => {
+        it("TC-43: should return 500 if service throws error", async () => {
             const req = mockRequest({}, { id: "room123" }, {});
             const res = mockResponse();
 
@@ -118,7 +118,7 @@ describe("Room Controller", () => {
 
     // --- TEST: seedDatabase ---
     describe("seedDatabase", () => {
-        it("should return 201 on success", async () => {
+        it("TC-44: should return 201 on success", async () => {
             const req = mockRequest();
             const res = mockResponse();
 
@@ -133,7 +133,7 @@ describe("Room Controller", () => {
             });
         });
 
-        it("should return 500 if seeding fails", async () => {
+        it("TC-45: should return 500 if seeding fails", async () => {
             const req = mockRequest();
             const res = mockResponse();
 
