@@ -92,3 +92,8 @@ jobs:
             - name: Trigger Render Deploy (Server)
               if: steps.changes.outputs.server == 'true'
               run: curl "${{ secrets.RENDER_DEPLOY_HOOK_SERVER }}"
+
+            # Trigger Client Deploy (ONLY if client folder changed)
+            - name: Trigger Netlify Deploy (Client)
+              if: steps.changes.outputs.client == 'true'
+              run: curl -X POST -d {} "${{ secrets.NETLIFY_DEPLOY_HOOK_CLIENT }}"
