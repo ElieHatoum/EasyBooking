@@ -56,7 +56,7 @@ describe("Security & Penetration Tests", () => {
         const userB = await createUser("UserB");
         const roomId = await createRoom();
 
-        // User A creates a booking (Tomorrow 10-11)
+        // User A creates a booking (Tomorrow)
         const start = new Date();
         start.setDate(start.getDate() + 1);
         start.setHours(10, 0, 0, 0);
