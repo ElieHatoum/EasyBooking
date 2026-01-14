@@ -1,0 +1,70 @@
+name: CI Pipeline
+
+on:
+    push:
+        branches: ["**"]
+    pull_request:
+        branches: ["main"]
+
+jobs:
+    # --- JOB: SERVER TESTS ---
+    server-tests:
+        runs-on: ubuntu-latest
+
+        defaults:
+            run:
+                working-directory: ./server
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "18"
+                  cache: "npm"
+                  cache-dependency-path: "./server/package-lock.json"
+
+            - name: Install Server Dependencies
+              run: npm ci
+
+            - name: Run Server Unit, Integration and Security Tests
+              run: npm test
+              env:
+                  NODE_ENV: test
+                  JWT_SECRET: "super_secret_ci_key"
+
+    # --- JOB: CLIENT CHECKS ---
+    client-checks:
+        runs-on: ubuntu-latest
+
+        defaults:
+            run:
+                working-directory: ./client
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "18"
+                  cache: "npm"
+                  cache-dependency-path: "./client/package-lock.json"
+
+            - name: Install Client Dependencies
+              run: npm ci
+
+            # Run Mocked E2E Tests (Cypress)
+            - name: Cypress Run
+              uses: cypress-io/github-action@v6
+              with:
+                  working-directory: ./client
+
+                  start: npm run dev
+
+                  wait-on: "http://localhost:5173"
+
+                  browser: chrome
