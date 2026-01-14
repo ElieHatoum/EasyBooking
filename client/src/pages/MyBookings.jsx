@@ -85,7 +85,7 @@ const MyBookings = () => {
                                 key={b._id}
                                 style={{ ...styles.card, ...styles.cardActive }}
                             >
-                                {/* Status Strip */}
+                                {/* Status Strip -*/}
                                 <div style={styles.statusStripActive}></div>
 
                                 <div style={styles.cardContent}>
