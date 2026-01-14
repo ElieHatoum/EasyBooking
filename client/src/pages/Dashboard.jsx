@@ -77,7 +77,7 @@ const Dashboard = () => {
                 endTime: end.toISOString(),
             });
             alert("Room booked successfully!");
-            setSelectedRoom(null); // Close modal
+            setSelectedRoom(null);
         } catch (err) {
             alert(err.response?.data?.msg || "Booking failed");
         }
