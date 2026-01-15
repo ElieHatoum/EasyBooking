@@ -7,7 +7,7 @@ EasyBooking is a full-stack web application for booking rooms, developed as a un
 | Service | URL | Status |
 | :--- | :--- | :--- |
 | **Frontend (Netlify)** | `https://easybookingfs.netlify.app/` | 🟢 Live |
-| **Backend (Render)** | `https://easybooking-7zov.onrender.com/api/` | 🟢 Live |
+| **Backend (Render)** | `https://easybooking-7zov.onrender.com/` | 🟢 Live |
 
 > **⚠️ Note on API:** The backend is hosted on a free-tier service (Render) which spins down after periods of inactivity. **The first login or request may take up to 60 seconds** while the server "wakes up." Please be patient; subsequent requests will be fast.
 
