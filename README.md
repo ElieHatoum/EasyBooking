@@ -2,6 +2,15 @@
 
 EasyBooking is a full-stack web application for booking rooms, developed as a university project. It features a React frontend and a Node.js/Express backend with MongoDB for data storage. The project is organized into two main folders: `client` (frontend) and `server` (backend).
 
+## Live Demo
+
+| Service | URL | Status |
+| :--- | :--- | :--- |
+| **Frontend (Netlify)** | `https://easybookingfs.netlify.app/` | 🟢 Live |
+| **Backend (Render)** | `https://easybooking-7zov.onrender.com/api/` | 🟢 Live |
+
+> **⚠️ Note on API:** The backend is hosted on a free-tier service (Render) which spins down after periods of inactivity. **The first login or request may take up to 60 seconds** while the server "wakes up." Please be patient; subsequent requests will be fast.
+
 ## Features
 
 -   **User Authentication**: Register and log in securely with JWT-based authentication.
