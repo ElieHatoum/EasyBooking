@@ -184,21 +184,28 @@ const Dashboard = () => {
                                 </strong>
                                 {availableSlots.length > 0 ? (
                                     <div style={styles.slotsGrid}>
-                                        {availableSlots.map((slot, idx) => (
-                                            <span
-                                                key={idx}
-                                                style={styles.slotBadge}
-                                            >
-                                                {new Date(
-                                                    slot.startTime
-                                                ).getHours()}
-                                                :00 -{" "}
-                                                {new Date(
-                                                    slot.endTime
-                                                ).getHours()}
-                                                :00
-                                            </span>
-                                        ))}
+                                        {availableSlots.map((slot, idx) => {
+                                            // Extract hours directly from ISO string to avoid timezone conversion
+                                            const startHour = parseInt(
+                                                slot.startTime
+                                                    .split("T")[1]
+                                                    .split(":")[0]
+                                            );
+                                            const endHour = parseInt(
+                                                slot.endTime
+                                                    .split("T")[1]
+                                                    .split(":")[0]
+                                            );
+                                            return (
+                                                <span
+                                                    key={idx}
+                                                    style={styles.slotBadge}
+                                                >
+                                                    {startHour}:00 - {endHour}
+                                                    :00
+                                                </span>
+                                            );
+                                        })}
                                     </div>
                                 ) : (
                                     <p
