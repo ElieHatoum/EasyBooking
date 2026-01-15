@@ -70,7 +70,7 @@ EasyBooking/
     ```
 4. Start the backend server:
     ```bash
-    npm start
+    node server.js
     ```
 
 ### Frontend Setup
