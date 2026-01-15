@@ -21,12 +21,11 @@ const getAllRooms = async (capacity) => {
 const getRoomAvailability = async (roomId, queryDate) => {
     try {
         // Define the bounds of the Day (08:00 to 18:00)
-        const date = new Date(queryDate || Date.now());
-        const dayStart = new Date(date);
-        dayStart.setHours(8, 0, 0, 0);
+        // Parse the date string in local timezone to avoid UTC offset issues
+        const [year, month, day] = queryDate.split("-").map(Number);
+        const dayStart = new Date(year, month - 1, day, 8, 0, 0, 0);
 
-        const dayEnd = new Date(date);
-        dayEnd.setHours(18, 0, 0, 0);
+        const dayEnd = new Date(year, month - 1, day, 18, 0, 0, 0);
 
         // Fetch bookings ONLY for this specific room and date
         const bookings = await Booking.find({
